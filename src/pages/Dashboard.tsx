@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
@@ -7,10 +6,8 @@ import ChannelManagement from '@/components/ChannelManagement';
 import Analytics from '@/components/Analytics';
 import DocumentManagement from '@/components/DocumentManagement';
 import { useLocation } from 'react-router-dom';
-
 const Dashboard = () => {
   const location = useLocation();
-
   const renderContent = () => {
     switch (location.pathname) {
       case '/profile':
@@ -22,17 +19,14 @@ const Dashboard = () => {
       case '/analytics':
         return <Analytics />;
       case '/transactions':
-        return (
-          <div className="max-w-4xl mx-auto">
+        return <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">Lịch sử giao dịch</h1>
             <div className="bg-white rounded-lg shadow p-6">
               <p className="text-gray-600">Chưa có giao dịch nào.</p>
             </div>
-          </div>
-        );
+          </div>;
       case '/upgrade':
-        return (
-          <div className="max-w-4xl mx-auto">
+        return <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">Nâng cấp gói dịch vụ</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow p-6 border-2 border-gray-200">
@@ -54,7 +48,7 @@ const Dashboard = () => {
               <div className="bg-white rounded-lg shadow p-6 border-2 border-primary">
                 <h3 className="text-xl font-bold mb-4">Gói Pro</h3>
                 <div className="mb-4">
-                  <span className="text-3xl font-bold text-primary">299,000đ</span>
+                  <span className="text-3xl font-bold text-primary">599,000đ</span>
                   <span className="text-gray-600">/tháng</span>
                 </div>
                 <ul className="space-y-2 mb-6">
@@ -69,11 +63,9 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
-          </div>
-        );
+          </div>;
       case '/settings':
-        return (
-          <div className="max-w-4xl mx-auto">
+        return <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">Cài đặt</h1>
             <div className="bg-white rounded-lg shadow p-6">
               <div className="space-y-6">
@@ -105,11 +97,9 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
-        );
+          </div>;
       default:
-        return (
-          <div className="max-w-6xl mx-auto">
+        return <div className="max-w-6xl mx-auto">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Chào mừng bạn trở lại! 👋
@@ -212,13 +202,10 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
-        );
+          </div>;
     }
   };
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex w-full">
+  return <div className="min-h-screen bg-gray-50 flex w-full">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <TopBar />
@@ -226,8 +213,6 @@ const Dashboard = () => {
           {renderContent()}
         </main>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Dashboard;
