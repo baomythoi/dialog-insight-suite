@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,8 +26,13 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#8B5CF6',
+					foreground: 'hsl(var(--primary-foreground))',
+					50: '#F3F0FF',
+					100: '#E9E2FF',
+					500: '#8B5CF6',
+					600: '#7C3AED',
+					700: '#6D28D9'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -53,14 +59,14 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+					DEFAULT: '#2D1B69',
+					foreground: '#FFFFFF',
+					primary: '#8B5CF6',
+					'primary-foreground': '#FFFFFF',
+					accent: '#3730A3',
+					'accent-foreground': '#FFFFFF',
+					border: '#3730A3',
+					ring: '#8B5CF6'
 				}
 			},
 			borderRadius: {
