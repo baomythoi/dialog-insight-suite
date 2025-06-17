@@ -12,7 +12,7 @@ const Landing = () => {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <MessageSquare className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-primary">Peny</span>
+              <span className="text-2xl font-bold text-primary">AIGEN</span>
             </div>
             <Link to="/auth">
               <Button className="bg-primary hover:bg-primary-600">
@@ -203,11 +203,9 @@ const Landing = () => {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <MessageSquare className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-primary">Peny</span>
+              <span className="text-xl font-bold text-primary">AIGEN</span>
             </div>
-            <p className="text-gray-600 text-sm">
-              © 2024 Peny. Tất cả quyền được bảo lưu.
-            </p>
+            <p className="text-gray-600 text-sm">© 2025 AI GEN. Tất cả quyền được bảo lưu.</p>
           </div>
         </div>
       </footer>
