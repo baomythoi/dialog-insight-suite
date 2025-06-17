@@ -19,7 +19,7 @@ const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
-    { icon: Home, label: 'Trang chủ', path: '/' },
+    { icon: Home, label: 'Trang chủ', path: '/dashboard' },
     { icon: User, label: 'Thông tin cá nhân', path: '/profile' },
     { icon: MessageSquare, label: 'Đào tạo chatbot', path: '/chatbot' },
     { icon: Users, label: 'Quản lý tin nhắn', path: '/messages' },
@@ -30,8 +30,8 @@ const Sidebar = () => {
   ];
 
   const isActive = (path: string) => {
-    if (path === '/' && location.pathname === '/') return true;
-    return location.pathname.startsWith(path) && path !== '/';
+    if (path === '/dashboard' && location.pathname === '/dashboard') return true;
+    return location.pathname.startsWith(path) && path !== '/dashboard';
   };
 
   return (
