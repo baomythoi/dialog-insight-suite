@@ -1,12 +1,9 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Users, BarChart3, Zap, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
 const Landing = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+  return <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -145,7 +142,7 @@ const Landing = () => {
               </div>
               <h3 className="text-2xl font-bold mb-4">Gói Pro</h3>
               <div className="mb-6">
-                <span className="text-4xl font-bold text-primary">299,000đ</span>
+                <span className="text-4xl font-bold text-primary">599,000đ</span>
                 <span className="text-gray-600">/tháng</span>
               </div>
               <ul className="space-y-3 mb-8">
@@ -214,8 +211,6 @@ const Landing = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Landing;
