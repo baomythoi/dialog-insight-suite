@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
 import ProfilePage from '@/components/ProfilePage';
@@ -8,12 +7,24 @@ import Analytics from '@/components/Analytics';
 import DocumentManagement from '@/components/DocumentManagement';
 import AuthPage from '@/components/AuthPage';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Set to false to see auth page
+  const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (!isAuthenticated) {
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+          <p className="mt-4 text-gray-600">Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
     return <AuthPage />;
   }
 
@@ -118,7 +129,7 @@ const Index = () => {
           <div className="max-w-6xl mx-auto">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Chào mừng bạn trở lại, Phuong! 👋
+                Chào mừng bạn trở lại! 👋
               </h1>
               <p className="text-gray-600">
                 Quản lý chatbot AI và theo dõi hiệu suất của bạn từ dashboard này.

@@ -1,14 +1,17 @@
 
 import React from 'react';
 import { Bell, Globe } from 'lucide-react';
+import { useProfile } from '@/hooks/useProfile';
 
 const TopBar = () => {
+  const { profile } = useProfile();
+  
   return (
     <div className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <span className="text-gray-600 text-sm">
-            Bạn còn <span className="font-semibold text-primary">7 ngày</span> sử dụng gói dùng thử.{' '}
+            Bạn còn <span className="font-semibold text-primary">{profile?.trial_days_remaining || 0} ngày</span> sử dụng gói dùng thử.{' '}
             <button className="text-primary hover:underline">Nâng cấp ngay ↗</button>
           </span>
         </div>
@@ -22,6 +25,17 @@ const TopBar = () => {
             <Globe className="w-4 h-4 text-gray-600" />
             <span className="text-sm text-gray-700">Tiếng Việt</span>
           </div>
+          
+          {profile && (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-medium">
+                  {profile.full_name?.charAt(0) || profile.email?.charAt(0)}
+                </span>
+              </div>
+              <span className="text-sm text-gray-700">{profile.full_name || profile.email}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

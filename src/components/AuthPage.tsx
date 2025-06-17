@@ -4,6 +4,7 @@ import { MessageSquare, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/hooks/useAuth';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,21 +15,45 @@ const AuthPage = () => {
     confirmPassword: '',
     name: ''
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { signIn, signUp, signInWithGoogle, signInWithFacebook } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle authentication logic here
-    console.log('Auth form submitted:', formData);
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        await signIn(formData.email, formData.password);
+      } else {
+        if (formData.password !== formData.confirmPassword) {
+          alert('Mật khẩu không khớp');
+          return;
+        }
+        await signUp(formData.email, formData.password, formData.name);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    // Handle Google OAuth
-    console.log('Google login');
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      await signInWithGoogle();
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleFacebookLogin = () => {
-    // Handle Facebook OAuth
-    console.log('Facebook login');
+  const handleFacebookLogin = async () => {
+    setLoading(true);
+    try {
+      await signInWithFacebook();
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -114,8 +139,8 @@ const AuthPage = () => {
               </div>
             )}
             
-            <Button type="submit" className="w-full bg-primary hover:bg-primary-600">
-              {isLogin ? 'Đăng nhập' : 'Tạo tài khoản'}
+            <Button type="submit" className="w-full bg-primary hover:bg-primary-600" disabled={loading}>
+              {loading ? 'Đang xử lý...' : (isLogin ? 'Đăng nhập' : 'Tạo tài khoản')}
             </Button>
           </form>
           
@@ -134,6 +159,7 @@ const AuthPage = () => {
               variant="outline"
               onClick={handleGoogleLogin}
               className="w-full"
+              disabled={loading}
             >
               <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -149,6 +175,7 @@ const AuthPage = () => {
               variant="outline"
               onClick={handleFacebookLogin}
               className="w-full"
+              disabled={loading}
             >
               <svg className="w-4 h-4 mr-2" fill="#1877F2" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -162,6 +189,7 @@ const AuthPage = () => {
               type="button"
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-primary hover:underline"
+              disabled={loading}
             >
               {isLogin 
                 ? 'Chưa có tài khoản? Đăng ký ngay' 

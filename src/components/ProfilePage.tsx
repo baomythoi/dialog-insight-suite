@@ -1,24 +1,47 @@
 
 import React, { useState } from 'react';
-import { Upload, Edit } from 'lucide-react';
+import { Upload, Edit, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    name: 'Phuong',
-    email: 'antoniodang269@gmail.com',
-    phone: '0989456789',
-    language: 'Tiếng Việt',
-    status: 'Đang hoạt động',
-    userId: '685168065fd1ef7237e709c7'
+  const { signOut, user } = useAuth();
+  const { profile, updateProfile } = useProfile();
+  const [formData, setFormData] = useState({
+    full_name: profile?.full_name || '',
+    email: profile?.email || ''
   });
+
+  const handleSave = async () => {
+    await updateProfile(formData);
+    setIsEditing(false);
+  };
+
+  const handleSignOut = () => {
+    signOut();
+  };
+
+  if (!profile) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Thông tin cá nhân</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Thông tin cá nhân</h1>
+        <Button onClick={handleSignOut} variant="outline" className="text-red-600 border-red-600 hover:bg-red-50">
+          <LogOut className="w-4 h-4 mr-2" />
+          Đăng xuất
+        </Button>
+      </div>
       
       {/* Profile Picture */}
       <Card>
@@ -28,7 +51,11 @@ const ProfilePage = () => {
         <CardContent>
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">
-              <Upload className="w-8 h-8 text-gray-500" />
+              {profile.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" className="w-24 h-24 rounded-full object-cover" />
+              ) : (
+                <Upload className="w-8 h-8 text-gray-500" />
+              )}
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-3">
@@ -61,72 +88,59 @@ const ProfilePage = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Tên</label>
               {isEditing ? (
                 <Input
-                  value={profileData.name}
-                  onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                  value={formData.full_name}
+                  onChange={(e) => setFormData({...formData, full_name: e.target.value})}
                 />
               ) : (
-                <p className="text-gray-900">{profileData.name}</p>
+                <p className="text-gray-900">{profile.full_name || 'Chưa cập nhật'}</p>
               )}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Ngôn ngữ</label>
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-4 bg-red-500 rounded-sm flex items-center justify-center">
-                  <span className="text-white text-xs">🇻🇳</span>
-                </div>
-                <span className="text-gray-900">{profileData.language}</span>
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">ID người dùng</label>
-              <p className="text-gray-900 font-mono text-sm">{profileData.userId}</p>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Trạng thái</label>
-              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                {profileData.status}
+              <label className="block text-sm font-medium text-gray-700 mb-2">Gói dịch vụ</label>
+              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                profile.plan_type === 'pro' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+              }`}>
+                {profile.plan_type === 'pro' ? 'Pro' : 'Miễn phí'}
               </span>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Mật khẩu</label>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-900">••••••••</span>
-                <Button variant="link" className="text-primary p-0">
-                  Chỉnh sửa
-                </Button>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">ID người dùng</label>
+              <p className="text-gray-900 font-mono text-sm">{profile.id}</p>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Ngày dùng thử còn lại</label>
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                {profile.trial_days_remaining} ngày
+              </span>
             </div>
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
               {isEditing ? (
                 <Input
-                  value={profileData.email}
-                  onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  disabled
                 />
               ) : (
-                <p className="text-gray-900">{profileData.email}</p>
+                <p className="text-gray-900">{profile.email}</p>
               )}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-900">{profileData.phone}</span>
-                <Button variant="link" className="text-primary p-0">
-                  Chưa xác thực
-                </Button>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Ngày tạo</label>
+              <span className="text-gray-900">
+                {new Date(profile.created_at).toLocaleDateString('vi-VN')}
+              </span>
             </div>
           </div>
           
           {isEditing && (
             <div className="mt-6 flex gap-3">
-              <Button className="bg-primary hover:bg-primary-600">
+              <Button onClick={handleSave} className="bg-primary hover:bg-primary-600">
                 Lưu thay đổi
               </Button>
               <Button variant="outline" onClick={() => setIsEditing(false)}>
