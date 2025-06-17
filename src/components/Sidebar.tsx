@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { User, MessageSquare, Settings, BarChart3, Upload, Calendar, FileText, Users, CreditCard, LogOut, Home } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+
 const Sidebar = () => {
   const location = useLocation();
+  const { signOut } = useAuth();
+  
   const menuItems = [{
     icon: Home,
     label: 'Trang chủ',
@@ -39,6 +43,9 @@ const Sidebar = () => {
   const isActive = (path: string) => {
     if (path === '/dashboard' && location.pathname === '/dashboard') return true;
     return location.pathname.startsWith(path) && path !== '/dashboard';
+  };
+  const handleSignOut = () => {
+    signOut();
   };
   return <div className="w-64 bg-sidebar h-screen flex flex-col">
       {/* Logo */}
@@ -84,11 +91,15 @@ const Sidebar = () => {
 
       {/* Logout */}
       <div className="p-4 border-t border-sidebar-border">
-        <button className="flex items-center gap-3 px-3 py-2 text-red-400 hover:bg-red-500/10 rounded-lg text-sm transition-colors w-full">
+        <button 
+          onClick={handleSignOut}
+          className="flex items-center gap-3 px-3 py-2 text-red-400 hover:bg-red-500/10 rounded-lg text-sm transition-colors w-full"
+        >
           <LogOut className="w-4 h-4" />
           Đăng xuất
         </button>
       </div>
     </div>;
 };
+
 export default Sidebar;
