@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Users, BarChart3, Zap, ArrowRight, Check } from 'lucide-react';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-cyan-100">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,7 +19,7 @@ const Landing = () => {
               <span className="text-2xl font-bold text-primary">AIGEN</span>
             </div>
             <Link to="/auth">
-              <Button className="bg-primary hover:bg-primary-600">
+              <Button className="bg-primary hover:bg-primary-700">
                 Đăng nhập
               </Button>
             </Link>
@@ -41,7 +40,7 @@ const Landing = () => {
           </p>
           <div className="flex gap-4 justify-center">
             <Link to="/auth">
-              <Button size="lg" className="bg-primary hover:bg-primary-600 text-white px-8 py-3">
+              <Button size="lg" className="bg-primary hover:bg-primary-700 text-white px-8 py-3">
                 Bắt đầu miễn phí
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -67,7 +66,7 @@ const Landing = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Đa nền tảng</h3>
@@ -77,7 +76,7 @@ const Landing = () => {
             </div>
             
             <div className="text-center p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">AI thông minh</h3>
@@ -87,7 +86,7 @@ const Landing = () => {
             </div>
             
             <div className="text-center p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <BarChart3 className="w-8 h-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Thống kê chi tiết</h3>
@@ -100,7 +99,7 @@ const Landing = () => {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gradient-to-r from-blue-50 to-cyan-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -183,12 +182,12 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary">
+      <section className="py-20 bg-gradient-to-r from-primary to-blue-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             Sẵn sàng tạo chatbot AI của bạn?
           </h2>
-          <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             Tham gia cùng hàng ngàn doanh nghiệp đã tin tưởng Peny để tự động hóa chăm sóc khách hàng
           </p>
           <Link to="/auth">
