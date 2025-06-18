@@ -1,17 +1,22 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Users, BarChart3, Zap, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
 const Landing = () => {
-  return <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-white" />
-              </div>
+              <img 
+                src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" 
+                alt="AIGEN Logo" 
+                className="w-10 h-10 object-contain"
+              />
               <span className="text-2xl font-bold text-primary">AIGEN</span>
             </div>
             <Link to="/auth">
@@ -200,15 +205,19 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-white" />
-              </div>
+              <img 
+                src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" 
+                alt="AIGEN Logo" 
+                className="w-8 h-8 object-contain"
+              />
               <span className="text-xl font-bold text-primary">AIGEN</span>
             </div>
             <p className="text-gray-600 text-sm">© 2025 AI GEN. Tất cả quyền được bảo lưu.</p>
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 export default Landing;
