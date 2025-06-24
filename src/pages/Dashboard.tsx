@@ -101,9 +101,7 @@ const Dashboard = () => {
       default:
         return <div className="max-w-6xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Chào mừng bạn trở lại! 👋
-              </h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Chào mừng bạn trở lại! </h1>
               <p className="text-gray-600">
                 Quản lý chatbot AI và theo dõi hiệu suất của bạn từ dashboard này.
               </p>
