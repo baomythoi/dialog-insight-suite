@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Bell, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useProfile } from '@/hooks/useProfile';
 
 const TopBar = () => {
@@ -10,6 +11,14 @@ const TopBar = () => {
     <div className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity mr-4">
+            <img 
+              src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" 
+              alt="AI GEN Logo" 
+              className="w-6 h-6 object-contain"
+            />
+            <span className="text-primary font-bold">AI GEN</span>
+          </Link>
           <span className="text-gray-600 text-sm">
             Bạn còn <span className="font-semibold text-primary">{profile?.trial_days_remaining || 0} ngày</span> sử dụng gói dùng thử.{' '}
             <button className="text-primary hover:underline">Nâng cấp ngay ↗</button>
