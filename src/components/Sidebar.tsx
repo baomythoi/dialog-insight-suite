@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { User, MessageSquare, Settings, BarChart3, Upload, Calendar, FileText, Users, CreditCard, LogOut, Home } from 'lucide-react';
@@ -40,22 +41,28 @@ const Sidebar = () => {
     label: 'Cài đặt',
     path: '/settings'
   }];
+  
   const isActive = (path: string) => {
     if (path === '/dashboard' && location.pathname === '/dashboard') return true;
     return location.pathname.startsWith(path) && path !== '/dashboard';
   };
+  
   const handleSignOut = () => {
     signOut();
   };
-  return <div className="w-64 bg-sidebar h-screen flex flex-col">
+  
+  return (
+    <div className="w-64 bg-sidebar h-screen flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <MessageSquare className="w-5 h-5 text-white" />
-          </div>
+        <Link to="/" className="flex items-center gap-3">
+          <img 
+            src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" 
+            alt="AIGEN Logo" 
+            className="w-8 h-8 object-contain"
+          />
           <span className="text-white text-xl font-bold">AI GEN</span>
-        </div>
+        </Link>
       </div>
 
       {/* Workspace selector */}
@@ -78,14 +85,23 @@ const Sidebar = () => {
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
           {menuItems.map(item => {
-          const Icon = item.icon;
-          return <li key={item.path}>
-                <Link to={item.path} className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${isActive(item.path) ? 'bg-primary text-white' : 'text-gray-300 hover:bg-sidebar-accent hover:text-white'}`}>
+            const Icon = item.icon;
+            return (
+              <li key={item.path}>
+                <Link 
+                  to={item.path} 
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                    isActive(item.path) 
+                      ? 'bg-primary text-white' 
+                      : 'text-gray-300 hover:bg-sidebar-accent hover:text-white'
+                  }`}
+                >
                   <Icon className="w-4 h-4" />
                   {item.label}
                 </Link>
-              </li>;
-        })}
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
@@ -99,7 +115,8 @@ const Sidebar = () => {
           Đăng xuất
         </button>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default Sidebar;
