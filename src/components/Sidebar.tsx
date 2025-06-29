@@ -22,7 +22,7 @@ const Sidebar = () => {
     path: '/chatbot'
   }, {
     icon: Users,
-    label: 'Quản lý tin nhắn',
+    label: 'Quản lý kênh',
     path: '/messages'
   }, {
     icon: BarChart3,

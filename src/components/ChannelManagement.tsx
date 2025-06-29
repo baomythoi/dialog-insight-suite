@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Facebook, Instagram, MessageSquare, Globe, Settings, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,17 +27,11 @@ const ChannelManagement = () => {
   ]);
 
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [newChannel, setNewChannel] = useState({
-    type: '',
-    name: '',
-    token: ''
-  });
 
   const channelTypes = [
-    { id: 'facebook', name: 'Facebook Messenger', icon: Facebook, color: 'bg-blue-600' },
+    { id: 'facebook', name: 'Facebook', icon: Facebook, color: 'bg-blue-600' },
     { id: 'instagram', name: 'Instagram', icon: Instagram, color: 'bg-pink-600' },
-    { id: 'zalo', name: 'Zalo', icon: MessageSquare, color: 'bg-blue-500' },
-    { id: 'webchat', name: 'Web Chat', icon: Globe, color: 'bg-green-600' }
+    { id: 'zalo', name: 'Zalo', icon: MessageSquare, color: 'bg-blue-500' }
   ];
 
   const getChannelIcon = (type: string) => {
@@ -51,19 +44,10 @@ const ChannelManagement = () => {
     return channel ? channel.color : 'bg-gray-600';
   };
 
-  const handleAddChannel = () => {
-    if (newChannel.type && newChannel.name && newChannel.token) {
-      setChannels([...channels, {
-        id: Date.now(),
-        type: newChannel.type,
-        name: newChannel.name,
-        status: 'connected',
-        messages: 0,
-        lastActivity: 'Vừa kết nối'
-      }]);
-      setNewChannel({ type: '', name: '', token: '' });
-      setShowAddDialog(false);
-    }
+  const handleChannelClick = (channelType: string) => {
+    // Backend URLs will be provided later for each channel
+    console.log(`Redirecting to ${channelType} backend URL`);
+    setShowAddDialog(false);
   };
 
   return (
@@ -79,56 +63,26 @@ const ChannelManagement = () => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Thêm kênh chat mới</DialogTitle>
+              <DialogTitle>Thêm kênh mới</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Loại kênh</label>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  {channelTypes.map((type) => {
-                    const Icon = type.icon;
-                    return (
-                      <button
-                        key={type.id}
-                        onClick={() => setNewChannel({...newChannel, type: type.id})}
-                        className={`p-3 border-2 rounded-lg flex items-center gap-2 text-sm ${
-                          newChannel.type === type.id 
-                            ? 'border-primary bg-primary-50' 
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        {type.name}
-                      </button>
-                    );
-                  })}
-                </div>
+              <div className="grid grid-cols-1 gap-4">
+                {channelTypes.map((type) => {
+                  const Icon = type.icon;
+                  return (
+                    <button
+                      key={type.id}
+                      onClick={() => handleChannelClick(type.id)}
+                      className="p-6 border-2 rounded-lg flex items-center justify-center gap-3 text-lg font-medium hover:border-primary hover:bg-primary-50 transition-colors"
+                    >
+                      <div className={`w-12 h-12 ${type.color} rounded-lg flex items-center justify-center`}>
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      {type.name}
+                    </button>
+                  );
+                })}
               </div>
-              
-              <div>
-                <label className="text-sm font-medium">Tên kênh</label>
-                <Input
-                  placeholder="Nhập tên kênh"
-                  value={newChannel.name}
-                  onChange={(e) => setNewChannel({...newChannel, name: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              
-              <div>
-                <label className="text-sm font-medium">API Token</label>
-                <Input
-                  placeholder="Nhập API token"
-                  type="password"
-                  value={newChannel.token}
-                  onChange={(e) => setNewChannel({...newChannel, token: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              
-              <Button onClick={handleAddChannel} className="w-full bg-primary hover:bg-primary-600">
-                Kết nối kênh
-              </Button>
             </div>
           </DialogContent>
         </Dialog>
