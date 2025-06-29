@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Upload, FileText, Trash2, Edit, Download, Plus } from 'lucide-react';
+import { Upload, FileText, Trash2, Edit, Download, Plus, FileDown, FileUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import * as XLSX from 'xlsx';
 
 const DocumentManagement = () => {
   const [faqItems, setFaqItems] = useState([
@@ -48,6 +50,8 @@ const DocumentManagement = () => {
 
   const [showFaqDialog, setShowFaqDialog] = useState(false);
   const [showScenarioDialog, setShowScenarioDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editingFaq, setEditingFaq] = useState(null);
   const [newFaq, setNewFaq] = useState({ question: '', answer: '', category: '' });
   const [newScenario, setNewScenario] = useState({ name: '', description: '', steps: [] });
 
@@ -61,6 +65,72 @@ const DocumentManagement = () => {
       setNewFaq({ question: '', answer: '', category: '' });
       setShowFaqDialog(false);
     }
+  };
+
+  const handleEditFaq = (faq) => {
+    setEditingFaq({ ...faq });
+    setShowEditDialog(true);
+  };
+
+  const handleUpdateFaq = () => {
+    if (editingFaq && editingFaq.question && editingFaq.answer) {
+      setFaqItems(faqItems.map(item => 
+        item.id === editingFaq.id 
+          ? { ...editingFaq, lastUpdated: new Date().toISOString().split('T')[0] }
+          : item
+      ));
+      setEditingFaq(null);
+      setShowEditDialog(false);
+    }
+  };
+
+  const handleDeleteFaq = (id) => {
+    setFaqItems(faqItems.filter(item => item.id !== id));
+  };
+
+  const downloadTemplate = () => {
+    const templateData = [
+      { category: 'Đặt hàng', question: 'Làm thế nào để đặt hàng?', answer: 'Bạn có thể đặt hàng qua website hoặc gọi hotline.' },
+      { category: 'Thanh toán', question: 'Hỗ trợ những phương thức thanh toán nào?', answer: 'Chúng tôi hỗ trợ thanh toán qua thẻ tín dụng, chuyển khoản và tiền mặt.' },
+      { category: 'Giao hàng', question: 'Thời gian giao hàng là bao lâu?', answer: 'Thời gian giao hàng từ 2-3 ngày làm việc trong nội thành.' }
+    ];
+
+    const worksheet = XLSX.utils.json_to_sheet(templateData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'FAQ Template');
+    
+    XLSX.writeFile(workbook, 'faq_template.xlsx');
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        const newFaqItems = jsonData.map((row, index) => ({
+          id: Date.now() + index,
+          question: row.question || '',
+          answer: row.answer || '',
+          category: row.category || '',
+          lastUpdated: new Date().toISOString().split('T')[0]
+        })).filter(item => item.question && item.answer);
+
+        setFaqItems([...faqItems, ...newFaqItems]);
+        event.target.value = '';
+      } catch (error) {
+        console.error('Error reading Excel file:', error);
+        alert('Có lỗi xảy ra khi đọc file Excel. Vui lòng kiểm tra định dạng file.');
+      }
+    };
+    reader.readAsArrayBuffer(file);
   };
 
   return (
@@ -78,52 +148,77 @@ const DocumentManagement = () => {
         <TabsContent value="faq" className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Câu hỏi thường gặp</h2>
-            <Dialog open={showFaqDialog} onOpenChange={setShowFaqDialog}>
-              <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary-600">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Thêm FAQ
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Thêm câu hỏi mới</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Danh mục</label>
-                    <Input
-                      placeholder="Ví dụ: Đặt hàng, Thanh toán..."
-                      value={newFaq.category}
-                      onChange={(e) => setNewFaq({...newFaq, category: e.target.value})}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Câu hỏi</label>
-                    <Input
-                      placeholder="Nhập câu hỏi"
-                      value={newFaq.question}
-                      onChange={(e) => setNewFaq({...newFaq, question: e.target.value})}
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Câu trả lời</label>
-                    <Textarea
-                      placeholder="Nhập câu trả lời"
-                      value={newFaq.answer}
-                      onChange={(e) => setNewFaq({...newFaq, answer: e.target.value})}
-                      className="mt-1"
-                      rows={4}
-                    />
-                  </div>
-                  <Button onClick={handleAddFaq} className="w-full bg-primary hover:bg-primary-600">
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={downloadTemplate}
+                className="bg-white hover:bg-gray-50"
+              >
+                <FileDown className="w-4 h-4 mr-2" />
+                Tải mẫu
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => document.getElementById('file-upload').click()}
+                className="bg-white hover:bg-gray-50"
+              >
+                <FileUp className="w-4 h-4 mr-2" />
+                Thêm mẫu
+              </Button>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleFileUpload}
+                style={{ display: 'none' }}
+              />
+              <Dialog open={showFaqDialog} onOpenChange={setShowFaqDialog}>
+                <DialogTrigger asChild>
+                  <Button className="bg-primary hover:bg-primary-600">
+                    <Plus className="w-4 h-4 mr-2" />
                     Thêm FAQ
                   </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Thêm câu hỏi mới</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium">Danh mục</label>
+                      <Input
+                        placeholder="Ví dụ: Đặt hàng, Thanh toán..."
+                        value={newFaq.category}
+                        onChange={(e) => setNewFaq({...newFaq, category: e.target.value})}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Câu hỏi</label>
+                      <Input
+                        placeholder="Nhập câu hỏi"
+                        value={newFaq.question}
+                        onChange={(e) => setNewFaq({...newFaq, question: e.target.value})}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Câu trả lời</label>
+                      <Textarea
+                        placeholder="Nhập câu trả lời"
+                        value={newFaq.answer}
+                        onChange={(e) => setNewFaq({...newFaq, answer: e.target.value})}
+                        className="mt-1"
+                        rows={4}
+                      />
+                    </div>
+                    <Button onClick={handleAddFaq} className="w-full bg-primary hover:bg-primary-600">
+                      Thêm FAQ
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
 
           <div className="grid gap-4">
@@ -142,18 +237,87 @@ const DocumentManagement = () => {
                       <p className="text-gray-600 text-sm">{faq.answer}</p>
                     </div>
                     <div className="flex gap-2 ml-4">
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleEditFaq(faq)}
+                      >
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-red-600">
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="sm" className="text-red-600">
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Bạn có chắc chắn muốn xóa câu hỏi này? Hành động này không thể hoàn tác.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Hủy</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => handleDeleteFaq(faq.id)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Xóa
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
+
+          {/* Edit FAQ Dialog */}
+          <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Chỉnh sửa câu hỏi</DialogTitle>
+              </DialogHeader>
+              {editingFaq && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Danh mục</label>
+                    <Input
+                      placeholder="Ví dụ: Đặt hàng, Thanh toán..."
+                      value={editingFaq.category}
+                      onChange={(e) => setEditingFaq({...editingFaq, category: e.target.value})}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Câu hỏi</label>
+                    <Input
+                      placeholder="Nhập câu hỏi"
+                      value={editingFaq.question}
+                      onChange={(e) => setEditingFaq({...editingFaq, question: e.target.value})}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Câu trả lời</label>
+                    <Textarea
+                      placeholder="Nhập câu trả lời"
+                      value={editingFaq.answer}
+                      onChange={(e) => setEditingFaq({...editingFaq, answer: e.target.value})}
+                      className="mt-1"
+                      rows={4}
+                    />
+                  </div>
+                  <Button onClick={handleUpdateFaq} className="w-full bg-primary hover:bg-primary-600">
+                    Cập nhật FAQ
+                  </Button>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         {/* Scenarios Tab */}
