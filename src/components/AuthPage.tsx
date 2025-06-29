@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MessageSquare, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,7 @@ const AuthPage = () => {
     signInWithGoogle,
     signInWithFacebook
   } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -37,6 +40,7 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
+
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
@@ -45,6 +49,7 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
+
   const handleFacebookLogin = async () => {
     setLoading(true);
     try {
@@ -53,15 +58,23 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
-  return <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4">
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex flex-col items-center justify-center p-4">
+      {/* Logo Section */}
+      <div className="mb-8">
+        <Link to="/" className="flex items-center gap-3">
+          <img 
+            src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" 
+            alt="AIGEN Logo" 
+            className="w-12 h-12 object-contain"
+          />
+          <span className="text-3xl font-bold text-primary">AIGEN</span>
+        </Link>
+      </div>
+
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <MessageSquare className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-primary">AIGEN</span>
-          </div>
           <CardTitle className="text-xl">
             {isLogin ? 'Đăng nhập vào tài khoản' : 'Tạo tài khoản mới'}
           </CardTitle>
@@ -149,6 +162,8 @@ const AuthPage = () => {
           </div>
         </CardContent>
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default AuthPage;
