@@ -11,6 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import * as XLSX from 'xlsx';
 
+// Type definition for Excel row data
+interface ExcelRowData {
+  category?: string;
+  question?: string;
+  answer?: string;
+}
+
 const DocumentManagement = () => {
   const [faqItems, setFaqItems] = useState([
     {
@@ -102,18 +109,22 @@ const DocumentManagement = () => {
     XLSX.writeFile(workbook, 'faq_template.xlsx');
   };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const data = new Uint8Array(e.target.result);
+        const result = e.target?.result;
+        if (!result) return;
+        
+        // Ensure we have an ArrayBuffer
+        const data = new Uint8Array(result as ArrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const jsonData = XLSX.utils.sheet_to_json(worksheet) as ExcelRowData[];
 
         const newFaqItems = jsonData.map((row, index) => ({
           id: Date.now() + index,
