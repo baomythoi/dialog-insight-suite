@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import * as XLSX from 'xlsx';
+import { useFaqItems } from '@/hooks/useFaqItems';
+import { useAuth } from '@/hooks/useAuth';
 
 // Type definition for Excel row data
 interface ExcelRowData {
@@ -19,22 +21,15 @@ interface ExcelRowData {
 }
 
 const DocumentManagement = () => {
-  const [faqItems, setFaqItems] = useState([
-    {
-      id: 1,
-      question: 'Làm thế nào để đặt hàng?',
-      answer: 'Bạn có thể đặt hàng qua website hoặc gọi hotline của chúng tôi.',
-      category: 'Đặt hàng',
-      lastUpdated: '2024-06-15'
-    },
-    {
-      id: 2,
-      question: 'Chính sách đổi trả như thế nào?',
-      answer: 'Chúng tôi hỗ trợ đổi trả trong vòng 30 ngày với điều kiện sản phẩm còn nguyên vẹn.',
-      category: 'Chính sách',
-      lastUpdated: '2024-06-14'
-    }
-  ]);
+  const { user } = useAuth();
+  const { 
+    faqItems, 
+    loading, 
+    addFaqItem, 
+    updateFaqItem, 
+    deleteFaqItem, 
+    addBulkFaqItems 
+  } = useFaqItems();
 
   const [scenarios, setScenarios] = useState([
     {
@@ -58,41 +53,37 @@ const DocumentManagement = () => {
   const [showFaqDialog, setShowFaqDialog] = useState(false);
   const [showScenarioDialog, setShowScenarioDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
-  const [editingFaq, setEditingFaq] = useState(null);
+  const [editingFaq, setEditingFaq] = useState<any>(null);
   const [newFaq, setNewFaq] = useState({ question: '', answer: '', category: '' });
   const [newScenario, setNewScenario] = useState({ name: '', description: '', steps: [] });
 
-  const handleAddFaq = () => {
+  const handleAddFaq = async () => {
     if (newFaq.question && newFaq.answer) {
-      setFaqItems([...faqItems, {
-        id: Date.now(),
-        ...newFaq,
-        lastUpdated: new Date().toISOString().split('T')[0]
-      }]);
+      await addFaqItem(newFaq);
       setNewFaq({ question: '', answer: '', category: '' });
       setShowFaqDialog(false);
     }
   };
 
-  const handleEditFaq = (faq) => {
+  const handleEditFaq = (faq: any) => {
     setEditingFaq({ ...faq });
     setShowEditDialog(true);
   };
 
-  const handleUpdateFaq = () => {
+  const handleUpdateFaq = async () => {
     if (editingFaq && editingFaq.question && editingFaq.answer) {
-      setFaqItems(faqItems.map(item => 
-        item.id === editingFaq.id 
-          ? { ...editingFaq, lastUpdated: new Date().toISOString().split('T')[0] }
-          : item
-      ));
+      await updateFaqItem(editingFaq.id, {
+        question: editingFaq.question,
+        answer: editingFaq.answer,
+        category: editingFaq.category
+      });
       setEditingFaq(null);
       setShowEditDialog(false);
     }
   };
 
-  const handleDeleteFaq = (id) => {
-    setFaqItems(faqItems.filter(item => item.id !== id));
+  const handleDeleteFaq = async (id: string) => {
+    await deleteFaqItem(id);
   };
 
   const downloadTemplate = () => {
@@ -109,12 +100,12 @@ const DocumentManagement = () => {
     XLSX.writeFile(workbook, 'faq_template.xlsx');
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const result = e.target?.result;
         if (!result) return;
@@ -126,15 +117,18 @@ const DocumentManagement = () => {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet) as ExcelRowData[];
 
-        const newFaqItems = jsonData.map((row, index) => ({
-          id: Date.now() + index,
-          question: row.question || '',
-          answer: row.answer || '',
-          category: row.category || '',
-          lastUpdated: new Date().toISOString().split('T')[0]
-        })).filter(item => item.question && item.answer);
+        const newFaqItems = jsonData
+          .filter(row => row.question && row.answer)
+          .map(row => ({
+            question: row.question || '',
+            answer: row.answer || '',
+            category: row.category || ''
+          }));
 
-        setFaqItems([...faqItems, ...newFaqItems]);
+        if (newFaqItems.length > 0) {
+          await addBulkFaqItems(newFaqItems);
+        }
+        
         event.target.value = '';
       } catch (error) {
         console.error('Error reading Excel file:', error);
@@ -143,6 +137,30 @@ const DocumentManagement = () => {
     };
     reader.readAsArrayBuffer(file);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto space-y-6">
+        <h1 className="text-2xl font-bold text-gray-900">Quản lý tài liệu</h1>
+        <div className="flex items-center justify-center py-8">
+          <div className="text-gray-500">Đang tải...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show auth required message if user is not logged in
+  if (!user) {
+    return (
+      <div className="max-w-6xl mx-auto space-y-6">
+        <h1 className="text-2xl font-bold text-gray-900">Quản lý tài liệu</h1>
+        <div className="flex items-center justify-center py-8">
+          <div className="text-gray-500">Vui lòng đăng nhập để sử dụng tính năng này.</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -170,7 +188,7 @@ const DocumentManagement = () => {
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => document.getElementById('file-upload').click()}
+                onClick={() => document.getElementById('file-upload')?.click()}
                 className="bg-white hover:bg-gray-50"
               >
                 <FileUp className="w-4 h-4 mr-2" />
