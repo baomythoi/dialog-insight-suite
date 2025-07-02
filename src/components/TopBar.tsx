@@ -1,23 +1,12 @@
 
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Bell, Globe } from 'lucide-react';
 import { useProfile } from '@/hooks/useProfile';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 const TopBar = () => {
   const { profile } = useProfile();
-  const { language, setLanguage, t } = useLanguage();
-  const navigate = useNavigate();
   
-  const handleUpgradeClick = () => {
-    navigate('/upgrade');
-  };
-
-  const toggleLanguage = () => {
-    setLanguage(language === 'vi' ? 'en' : 'vi');
-  };
-
   return (
     <div className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -31,13 +20,8 @@ const TopBar = () => {
             <span className="text-xl font-bold text-primary">AIGEN</span>
           </Link>
           <span className="text-gray-600 text-sm">
-            {t('topbar.daysLeft').replace('{days}', String(profile?.trial_days_remaining || 0))}{' '}
-            <button 
-              onClick={handleUpgradeClick}
-              className="text-primary hover:underline"
-            >
-              {t('topbar.upgradeNow')}
-            </button>
+            Bạn còn <span className="font-semibold text-primary">{profile?.trial_days_remaining || 0} ngày</span> sử dụng gói dùng thử.{' '}
+            <button className="text-primary hover:underline">Nâng cấp ngay ↗</button>
           </span>
         </div>
         
@@ -46,15 +30,10 @@ const TopBar = () => {
             <Bell className="w-5 h-5 text-gray-600" />
           </button>
           
-          <button 
-            onClick={toggleLanguage}
-            className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 hover:bg-gray-200 transition-colors"
-          >
+          <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2">
             <Globe className="w-4 h-4 text-gray-600" />
-            <span className="text-sm text-gray-700">
-              {language === 'vi' ? t('topbar.vietnamese') : t('topbar.english')}
-            </span>
-          </button>
+            <span className="text-sm text-gray-700">Tiếng Việt</span>
+          </div>
           
           {profile && (
             <div className="flex items-center gap-2">
