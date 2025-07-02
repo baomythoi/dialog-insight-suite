@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      channels: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          status: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          status?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       faq_items: {
         Row: {
           answer: string
@@ -69,6 +99,74 @@ export type Database = {
           plan_type?: string | null
           trial_days_remaining?: number | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      usage_stats: {
+        Row: {
+          channel_id: string | null
+          created_at: string
+          date: string
+          id: string
+          message_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          channel_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          message_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          channel_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          message_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_stats_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "channels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_quotas: {
+        Row: {
+          created_at: string
+          current_month_usage: number
+          id: string
+          monthly_message_limit: number
+          quota_reset_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_month_usage?: number
+          id?: string
+          monthly_message_limit?: number
+          quota_reset_date?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_month_usage?: number
+          id?: string
+          monthly_message_limit?: number
+          quota_reset_date?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

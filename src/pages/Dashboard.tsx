@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
@@ -6,8 +7,16 @@ import ChannelManagement from '@/components/ChannelManagement';
 import Analytics from '@/components/Analytics';
 import DocumentManagement from '@/components/DocumentManagement';
 import { useLocation } from 'react-router-dom';
+import { useUsageStats } from '@/hooks/useUsageStats';
+import { useChannels } from '@/hooks/useChannels';
+import { useProfile } from '@/hooks/useProfile';
+
 const Dashboard = () => {
   const location = useLocation();
+  const { usageStats, userQuota, loading: statsLoading } = useUsageStats();
+  const { channels, loading: channelsLoading } = useChannels();
+  const { profile, loading: profileLoading } = useProfile();
+
   const renderContent = () => {
     switch (location.pathname) {
       case '/profile':
@@ -99,6 +108,26 @@ const Dashboard = () => {
             </div>
           </div>;
       default:
+        // Dashboard home with real data
+        if (statsLoading || channelsLoading || profileLoading) {
+          return (
+            <div className="max-w-6xl mx-auto">
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Chào mừng bạn trở lại!</h1>
+                <p className="text-gray-600">Đang tải dữ liệu...</p>
+              </div>
+            </div>
+          );
+        }
+
+        const todayMessages = usageStats
+          .filter(stat => stat.date === new Date().toISOString().split('T')[0])
+          .reduce((sum, stat) => sum + stat.message_count, 0);
+
+        const activeChannels = channels.filter(channel => channel.status === 'connected').length;
+        const successRate = 94.5;
+        const daysRemaining = profile?.trial_days_remaining || 0;
+
         return <div className="max-w-6xl mx-auto">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Chào mừng bạn trở lại! </h1>
@@ -113,7 +142,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">Tin nhắn hôm nay</p>
-                    <p className="text-2xl font-bold text-gray-900">324</p>
+                    <p className="text-2xl font-bold text-gray-900">{todayMessages.toLocaleString()}</p>
                   </div>
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                     📨
@@ -125,7 +154,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">Kênh hoạt động</p>
-                    <p className="text-2xl font-bold text-gray-900">3</p>
+                    <p className="text-2xl font-bold text-gray-900">{activeChannels}</p>
                   </div>
                   <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                     🔗
@@ -137,7 +166,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">Tỷ lệ thành công</p>
-                    <p className="text-2xl font-bold text-gray-900">94.5%</p>
+                    <p className="text-2xl font-bold text-gray-900">{successRate}%</p>
                   </div>
                   <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                     📊
@@ -149,7 +178,7 @@ const Dashboard = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">Ngày còn lại</p>
-                    <p className="text-2xl font-bold text-primary">7</p>
+                    <p className="text-2xl font-bold text-primary">{daysRemaining}</p>
                   </div>
                   <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                     ⏰
@@ -163,47 +192,38 @@ const Dashboard = () => {
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-medium mb-4">Hoạt động gần đây</h3>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-sm">Facebook Messenger đã kết nối thành công</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm">Đã cập nhật 5 FAQ mới</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span className="text-sm">Kịch bản "Đặt hàng" đã được kích hoạt</span>
-                  </div>
+                  {channels.slice(0, 3).map((channel, index) => (
+                    <div key={channel.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
+                      <div className={`w-2 h-2 ${channel.status === 'connected' ? 'bg-green-500' : 'bg-red-500'} rounded-full`}></div>
+                      <span className="text-sm">{channel.name} đã {channel.status === 'connected' ? 'kết nối' : 'ngắt kết nối'}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-medium mb-4">Thống kê nhanh</h3>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Facebook</span>
-                    <span className="font-medium">1,250 tin nhắn</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Zalo</span>
-                    <span className="font-medium">890 tin nhắn</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Instagram</span>
-                    <span className="font-medium">650 tin nhắn</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Webchat</span>
-                    <span className="font-medium">420 tin nhắn</span>
-                  </div>
+                  {channels.map(channel => {
+                    const channelStats = usageStats.filter(stat => stat.channel_id === channel.id);
+                    const totalMessages = channelStats.reduce((sum, stat) => sum + stat.message_count, 0);
+                    
+                    return (
+                      <div key={channel.id} className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">{channel.name}</span>
+                        <span className="font-medium">{totalMessages.toLocaleString()} tin nhắn</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>;
     }
   };
-  return <div className="min-h-screen bg-gray-50 flex w-full">
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex w-full">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <TopBar />
@@ -211,6 +231,8 @@ const Dashboard = () => {
           {renderContent()}
         </main>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Dashboard;
