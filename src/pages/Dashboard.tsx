@@ -114,7 +114,7 @@ const Dashboard = () => {
           .reduce((sum, stat) => sum + stat.message_count, 0);
 
         const activeChannels = channels.filter(channel => channel.status === 'connected').length;
-        const successRate = 94.5;
+        const successRate = 100;
         const daysRemaining = profile?.trial_days_remaining || 0;
 
         return <div className="max-w-6xl mx-auto">
