@@ -4,8 +4,9 @@ import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
 import ProfilePage from '@/components/ProfilePage';
 import ChannelManagement from '@/components/ChannelManagement';
-import Analytics from '@/components/Analytics';
+
 import DocumentManagement from '@/components/DocumentManagement';
+import PasswordChangeForm from '@/components/PasswordChangeForm';
 import { useLocation } from 'react-router-dom';
 import { useUsageStats } from '@/hooks/useUsageStats';
 import { useChannels } from '@/hooks/useChannels';
@@ -25,8 +26,6 @@ const Dashboard = () => {
         return <DocumentManagement />;
       case '/messages':
         return <ChannelManagement />;
-      case '/analytics':
-        return <Analytics />;
       case '/transactions':
         return <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">Lịch sử giao dịch</h1>
@@ -76,35 +75,35 @@ const Dashboard = () => {
       case '/settings':
         return <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">Cài đặt</h1>
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-3">Cài đặt thông báo</h3>
-                  <div className="space-y-3">
-                    <label className="flex items-center">
-                      <input type="checkbox" className="mr-2" defaultChecked />
-                      Thông báo tin nhắn mới
-                    </label>
-                    <label className="flex items-center">
-                      <input type="checkbox" className="mr-2" defaultChecked />
-                      Thông báo cập nhật hệ thống
-                    </label>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium mb-3">Cài đặt thông báo</h3>
+                    <div className="space-y-3">
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" defaultChecked />
+                        Thông báo tin nhắn mới
+                      </label>
+                      <label className="flex items-center">
+                        <input type="checkbox" className="mr-2" defaultChecked />
+                        Thông báo cập nhật hệ thống
+                      </label>
+                    </div>
                   </div>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-3">Cài đặt bảo mật</h3>
-                  <div className="space-y-3">
-                    <button className="text-primary hover:underline">
-                      Đổi mật khẩu
-                    </button>
-                    <br />
-                    <button className="text-primary hover:underline">
-                      Xác thực 2 bước
-                    </button>
+                  
+                  <div>
+                    <h3 className="text-lg font-medium mb-3">Cài đặt bảo mật</h3>
+                    <div className="space-y-3">
+                      <button className="text-primary hover:underline">
+                        Xác thực 2 bước
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              <PasswordChangeForm />
             </div>
           </div>;
       default:

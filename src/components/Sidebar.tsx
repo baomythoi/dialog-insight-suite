@@ -25,10 +25,6 @@ const Sidebar = () => {
     label: 'Quản lý kênh',
     path: '/messages'
   }, {
-    icon: BarChart3,
-    label: 'Thống kê',
-    path: '/analytics'
-  }, {
     icon: Upload,
     label: 'Lịch sử giao dịch',
     path: '/transactions'
