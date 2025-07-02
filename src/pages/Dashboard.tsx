@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
@@ -89,15 +88,6 @@ const Dashboard = () => {
                         <input type="checkbox" className="mr-2" defaultChecked />
                         Thông báo cập nhật hệ thống
                       </label>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-medium mb-3">Cài đặt bảo mật</h3>
-                    <div className="space-y-3">
-                      <button className="text-primary hover:underline">
-                        Xác thực 2 bước
-                      </button>
                     </div>
                   </div>
                 </div>
