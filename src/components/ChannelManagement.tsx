@@ -5,53 +5,53 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-
 const ChannelManagement = () => {
-  const [channels, setChannels] = useState([
-    {
-      id: 1,
-      type: 'facebook',
-      name: 'Facebook Page',
-      status: 'connected',
-      messages: 1250,
-      lastActivity: '2 giờ trước'
-    },
-    {
-      id: 2,
-      type: 'zalo',
-      name: 'Zalo OA',
-      status: 'connected',
-      messages: 890,
-      lastActivity: '5 giờ trước'
-    }
-  ]);
-
+  const [channels, setChannels] = useState([{
+    id: 1,
+    type: 'facebook',
+    name: 'Facebook Page',
+    status: 'connected',
+    messages: 1250,
+    lastActivity: '2 giờ trước'
+  }, {
+    id: 2,
+    type: 'zalo',
+    name: 'Zalo OA',
+    status: 'connected',
+    messages: 890,
+    lastActivity: '5 giờ trước'
+  }]);
   const [showAddDialog, setShowAddDialog] = useState(false);
-
-  const channelTypes = [
-    { id: 'facebook', name: 'Facebook', icon: Facebook, color: 'bg-blue-600' },
-    { id: 'instagram', name: 'Instagram', icon: Instagram, color: 'bg-pink-600' },
-    { id: 'zalo', name: 'Zalo', icon: MessageSquare, color: 'bg-blue-500' }
-  ];
-
+  const channelTypes = [{
+    id: 'facebook',
+    name: 'Facebook',
+    icon: Facebook,
+    color: 'bg-blue-600'
+  }, {
+    id: 'instagram',
+    name: 'Instagram',
+    icon: Instagram,
+    color: 'bg-pink-600'
+  }, {
+    id: 'zalo',
+    name: 'Zalo',
+    icon: MessageSquare,
+    color: 'bg-blue-500'
+  }];
   const getChannelIcon = (type: string) => {
     const channel = channelTypes.find(c => c.id === type);
     return channel ? channel.icon : MessageSquare;
   };
-
   const getChannelColor = (type: string) => {
     const channel = channelTypes.find(c => c.id === type);
     return channel ? channel.color : 'bg-gray-600';
   };
-
   const handleChannelClick = (channelType: string) => {
     // Backend URLs will be provided later for each channel
     console.log(`Redirecting to ${channelType} backend URL`);
     setShowAddDialog(false);
   };
-
-  return (
-    <div className="max-w-6xl mx-auto space-y-6">
+  return <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Quản lý kênh</h1>
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
@@ -67,21 +67,15 @@ const ChannelManagement = () => {
             </DialogHeader>
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
-                {channelTypes.map((type) => {
-                  const Icon = type.icon;
-                  return (
-                    <button
-                      key={type.id}
-                      onClick={() => handleChannelClick(type.id)}
-                      className="p-6 border-2 rounded-lg flex items-center justify-center gap-3 text-lg font-medium hover:border-primary hover:bg-primary-50 transition-colors"
-                    >
+                {channelTypes.map(type => {
+                const Icon = type.icon;
+                return <button key={type.id} onClick={() => handleChannelClick(type.id)} className="p-6 border-2 rounded-lg flex items-center justify-center gap-3 text-lg font-medium hover:border-primary hover:bg-primary-50 transition-colors">
                       <div className={`w-12 h-12 ${type.color} rounded-lg flex items-center justify-center`}>
                         <Icon className="w-6 h-6 text-white" />
                       </div>
                       {type.name}
-                    </button>
-                  );
-                })}
+                    </button>;
+              })}
               </div>
             </div>
           </DialogContent>
@@ -90,12 +84,10 @@ const ChannelManagement = () => {
 
       {/* Channel List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {channels.map((channel) => {
-          const Icon = getChannelIcon(channel.type);
-          const colorClass = getChannelColor(channel.type);
-          
-          return (
-            <Card key={channel.id} className="relative">
+        {channels.map(channel => {
+        const Icon = getChannelIcon(channel.type);
+        const colorClass = getChannelColor(channel.type);
+        return <Card key={channel.id} className="relative">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -136,9 +128,8 @@ const ChannelManagement = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          );
-        })}
+            </Card>;
+      })}
       </div>
 
       {/* Quick Setup Guide */}
@@ -149,26 +140,20 @@ const ChannelManagement = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium mb-2">Facebook Messenger</h4>
+              <h4 className="font-medium mb-2">Các bước thực hiện</h4>
               <p className="text-sm text-gray-600 mb-2">
-                1. Truy cập Facebook Developers<br/>
-                2. Tạo ứng dụng và lấy Page Access Token<br/>
+                1. Truy cập Facebook Developers<br />
+                2. Tạo ứng dụng và lấy Page Access Token<br />
                 3. Dán token vào form trên
               </p>
             </div>
             <div>
-              <h4 className="font-medium mb-2">Zalo OA</h4>
-              <p className="text-sm text-gray-600 mb-2">
-                1. Đăng ký Zalo Official Account<br/>
-                2. Lấy Access Token từ Zalo Developers<br/>
-                3. Kết nối với hệ thống
-              </p>
+              
+              
             </div>
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default ChannelManagement;
