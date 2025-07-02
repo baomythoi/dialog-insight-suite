@@ -179,9 +179,7 @@ const Landing = () => {
           <h2 className="text-3xl font-bold text-white mb-4">
             Sẵn sàng tạo chatbot AI của bạn?
           </h2>
-          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-            Tham gia cùng hàng ngàn doanh nghiệp đã tin tưởng Peny để tự động hóa chăm sóc khách hàng
-          </p>
+          <p className="text-blue-100 mb-8 max-w-2xl mx-auto">Tham gia cùng hàng ngàn doanh nghiệp đã tin tưởng AIGEN để tự động hóa chăm sóc khách hàng</p>
           <Link to="/auth">
             <Button size="lg" variant="secondary" className="bg-white text-primary hover:bg-gray-100 px-8 py-3">
               Bắt đầu miễn phí ngay
@@ -199,7 +197,7 @@ const Landing = () => {
               <img src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" alt="AIGEN Logo" className="w-8 h-8 object-contain" />
               <span className="text-xl font-bold text-primary">AIGEN</span>
             </div>
-            <p className="text-gray-600 text-sm">© 2025 AI GEN. Tất cả quyền được bảo lưu.</p>
+            <p className="text-gray-600 text-sm">© 2025 AI GEN.</p>
           </div>
         </div>
       </footer>
