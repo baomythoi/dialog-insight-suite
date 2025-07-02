@@ -134,25 +134,8 @@ const ChannelManagement = () => {
 
       {/* Quick Setup Guide */}
       <Card>
-        <CardHeader>
-          <CardTitle>Hướng dẫn kết nối kênh</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-medium mb-2">Các bước thực hiện</h4>
-              <p className="text-sm text-gray-600 mb-2">
-                1. Truy cập Facebook Developers<br />
-                2. Tạo ứng dụng và lấy Page Access Token<br />
-                3. Dán token vào form trên
-              </p>
-            </div>
-            <div>
-              
-              
-            </div>
-          </div>
-        </CardContent>
+        
+        
       </Card>
     </div>;
 };
