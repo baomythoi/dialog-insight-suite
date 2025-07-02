@@ -2,20 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Users, BarChart3, Zap, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
 const Landing = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-cyan-100">
+  return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-cyan-100">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center gap-3">
-              <img 
-                src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" 
-                alt="AIGEN Logo" 
-                className="w-10 h-10 object-contain"
-              />
+              <img src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" alt="AIGEN Logo" className="w-10 h-10 object-contain" />
               <span className="text-2xl font-bold text-primary">AIGEN</span>
             </div>
             <Link to="/auth">
@@ -59,9 +53,7 @@ const Landing = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Tính năng nổi bật
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Peny cung cấp bộ công cụ hoàn chỉnh để tạo, quản lý và tối ưu hóa chatbot AI của bạn
-            </p>
+            <p className="text-gray-600 max-w-2xl mx-auto">AIGEN cung cấp bộ công cụ hoàn chỉnh để tạo, quản lý và tối ưu hóa chatbot AI của bạn</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -204,19 +196,13 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img 
-                src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" 
-                alt="AIGEN Logo" 
-                className="w-8 h-8 object-contain"
-              />
+              <img src="/lovable-uploads/7e285b94-c226-4703-b0a3-d7c518b47094.png" alt="AIGEN Logo" className="w-8 h-8 object-contain" />
               <span className="text-xl font-bold text-primary">AIGEN</span>
             </div>
             <p className="text-gray-600 text-sm">© 2025 AI GEN. Tất cả quyền được bảo lưu.</p>
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Landing;
