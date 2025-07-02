@@ -10,12 +10,14 @@ import { useLocation } from 'react-router-dom';
 import { useUsageStats } from '@/hooks/useUsageStats';
 import { useChannels } from '@/hooks/useChannels';
 import { useProfile } from '@/hooks/useProfile';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Dashboard = () => {
   const location = useLocation();
   const { usageStats, userQuota, loading: statsLoading } = useUsageStats();
   const { channels, loading: channelsLoading } = useChannels();
   const { profile, loading: profileLoading } = useProfile();
+  const { t } = useLanguage();
 
   const renderContent = () => {
     switch (location.pathname) {
@@ -29,14 +31,14 @@ const Dashboard = () => {
         return <Analytics />;
       case '/transactions':
         return <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Lịch sử giao dịch</h1>
+            <h1 className="text-2xl font-bold mb-6">{t('nav.transactions')}</h1>
             <div className="bg-white rounded-lg shadow p-6">
-              <p className="text-gray-600">Chưa có giao dịch nào.</p>
+              <p className="text-gray-600">{t('common.noData')}</p>
             </div>
           </div>;
       case '/upgrade':
         return <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Nâng cấp gói dịch vụ</h1>
+            <h1 className="text-2xl font-bold mb-6">{t('nav.upgrade')}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow p-6 border-2 border-gray-200">
                 <h3 className="text-xl font-bold mb-4">Gói miễn phí</h3>
@@ -75,7 +77,7 @@ const Dashboard = () => {
           </div>;
       case '/settings':
         return <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Cài đặt</h1>
+            <h1 className="text-2xl font-bold mb-6">{t('nav.settings')}</h1>
             <div className="bg-white rounded-lg shadow p-6">
               <div className="space-y-6">
                 <div>
@@ -113,8 +115,8 @@ const Dashboard = () => {
           return (
             <div className="max-w-6xl mx-auto">
               <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Chào mừng bạn trở lại!</h1>
-                <p className="text-gray-600">Đang tải dữ liệu...</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('dashboard.welcome')}</h1>
+                <p className="text-gray-600">{t('common.loading')}</p>
               </div>
             </div>
           );
@@ -125,14 +127,14 @@ const Dashboard = () => {
           .reduce((sum, stat) => sum + stat.message_count, 0);
 
         const activeChannels = channels.filter(channel => channel.status === 'connected').length;
-        const successRate = 94.5;
+        const messagesRemaining = (userQuota?.monthly_message_limit || 1000) - (userQuota?.current_month_usage || 0);
         const daysRemaining = profile?.trial_days_remaining || 0;
 
         return <div className="max-w-6xl mx-auto">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Chào mừng bạn trở lại! </h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('dashboard.welcome')}</h1>
               <p className="text-gray-600">
-                Quản lý chatbot AI và theo dõi hiệu suất của bạn từ dashboard này.
+                {t('dashboard.description')}
               </p>
             </div>
             
@@ -141,7 +143,7 @@ const Dashboard = () => {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Tin nhắn hôm nay</p>
+                    <p className="text-sm text-gray-600">{t('dashboard.todayMessages')}</p>
                     <p className="text-2xl font-bold text-gray-900">{todayMessages.toLocaleString()}</p>
                   </div>
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -153,7 +155,7 @@ const Dashboard = () => {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Kênh hoạt động</p>
+                    <p className="text-sm text-gray-600">{t('dashboard.activeChannels')}</p>
                     <p className="text-2xl font-bold text-gray-900">{activeChannels}</p>
                   </div>
                   <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -165,8 +167,8 @@ const Dashboard = () => {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Tỷ lệ thành công</p>
-                    <p className="text-2xl font-bold text-gray-900">{successRate}%</p>
+                    <p className="text-sm text-gray-600">{t('dashboard.messagesRemaining')}</p>
+                    <p className="text-2xl font-bold text-gray-900">{messagesRemaining.toLocaleString()}</p>
                   </div>
                   <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                     📊
@@ -177,7 +179,7 @@ const Dashboard = () => {
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Ngày còn lại</p>
+                    <p className="text-sm text-gray-600">{t('dashboard.daysRemaining')}</p>
                     <p className="text-2xl font-bold text-primary">{daysRemaining}</p>
                   </div>
                   <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -190,19 +192,21 @@ const Dashboard = () => {
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-medium mb-4">Hoạt động gần đây</h3>
+                <h3 className="text-lg font-medium mb-4">{t('dashboard.recentActivity')}</h3>
                 <div className="space-y-3">
                   {channels.slice(0, 3).map((channel, index) => (
                     <div key={channel.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded">
                       <div className={`w-2 h-2 ${channel.status === 'connected' ? 'bg-green-500' : 'bg-red-500'} rounded-full`}></div>
-                      <span className="text-sm">{channel.name} đã {channel.status === 'connected' ? 'kết nối' : 'ngắt kết nối'}</span>
+                      <span className="text-sm">
+                        {channel.name} đã {channel.status === 'connected' ? t('dashboard.connected') : t('dashboard.disconnected')}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
               
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-medium mb-4">Thống kê nhanh</h3>
+                <h3 className="text-lg font-medium mb-4">{t('dashboard.quickStats')}</h3>
                 <div className="space-y-4">
                   {channels.map(channel => {
                     const channelStats = usageStats.filter(stat => stat.channel_id === channel.id);
@@ -211,7 +215,7 @@ const Dashboard = () => {
                     return (
                       <div key={channel.id} className="flex justify-between items-center">
                         <span className="text-sm text-gray-600">{channel.name}</span>
-                        <span className="font-medium">{totalMessages.toLocaleString()} tin nhắn</span>
+                        <span className="font-medium">{totalMessages.toLocaleString()} {t('dashboard.messages')}</span>
                       </div>
                     );
                   })}

@@ -1,14 +1,15 @@
 
 import React from 'react';
-import { TrendingUp, MessageSquare, Users, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { useUsageStats } from '@/hooks/useUsageStats';
 import { useChannels } from '@/hooks/useChannels';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Analytics = () => {
   const { usageStats, userQuota, loading: statsLoading } = useUsageStats();
   const { channels, loading: channelsLoading } = useChannels();
+  const { t } = useLanguage();
 
   // Process real data for charts
   const messageData = usageStats.slice(0, 7).reverse().map((stat, index) => ({
@@ -50,17 +51,12 @@ const Analytics = () => {
     { time: '18-24', messages: Math.floor(Math.random() * 350) + 150 },
   ];
 
-  const totalMessages = channelData.reduce((sum, item) => sum + item.messages, 0);
-  const activeUsers = Math.floor(totalMessages * 0.7); // Estimate active users
-  const avgResponseTime = 1.2;
-  const successRate = 94.5;
-
   if (statsLoading || channelsLoading) {
     return (
       <div className="max-w-6xl mx-auto space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900">Thống kê & Phân tích</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('analytics.title')}</h1>
         <div className="text-center py-8">
-          <p className="text-gray-600">Đang tải dữ liệu...</p>
+          <p className="text-gray-600">{t('analytics.loading')}</p>
         </div>
       </div>
     );
@@ -68,83 +64,14 @@ const Analytics = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Thống kê & Phân tích</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('analytics.title')}</h1>
       
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Tổng tin nhắn</p>
-                <p className="text-2xl font-bold text-gray-900">{totalMessages.toLocaleString()}</p>
-                <p className="text-xs text-green-600 flex items-center mt-1">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +12% so với tháng trước
-                </p>
-              </div>
-              <MessageSquare className="w-8 h-8 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Người dùng hoạt động</p>
-                <p className="text-2xl font-bold text-gray-900">{activeUsers.toLocaleString()}</p>
-                <p className="text-xs text-green-600 flex items-center mt-1">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +8% so với tuần trước
-                </p>
-              </div>
-              <Users className="w-8 h-8 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Thời gian phản hồi TB</p>
-                <p className="text-2xl font-bold text-gray-900">{avgResponseTime}s</p>
-                <p className="text-xs text-green-600 flex items-center mt-1">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  Cải thiện 15%
-                </p>
-              </div>
-              <Clock className="w-8 h-8 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Tỷ lệ thành công</p>
-                <p className="text-2xl font-bold text-gray-900">{successRate}%</p>
-                <p className="text-xs text-green-600 flex items-center mt-1">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +2.1% so với tháng trước
-                </p>
-              </div>
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Message Trend */}
         <Card>
           <CardHeader>
-            <CardTitle>Xu hướng tin nhắn (7 ngày qua)</CardTitle>
+            <CardTitle>{t('analytics.messageTrend')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -162,7 +89,7 @@ const Analytics = () => {
         {/* Channel Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Phân bố theo kênh</CardTitle>
+            <CardTitle>{t('analytics.channelDistribution')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -190,7 +117,7 @@ const Analytics = () => {
         {/* Time Distribution */}
         <Card>
           <CardHeader>
-            <CardTitle>Phân bố theo giờ</CardTitle>
+            <CardTitle>{t('analytics.timeDistribution')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -208,27 +135,30 @@ const Analytics = () => {
         {/* Channel Performance */}
         <Card>
           <CardHeader>
-            <CardTitle>Hiệu suất kênh</CardTitle>
+            <CardTitle>{t('analytics.channelPerformance')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {channelData.map((channel) => (
-                <div key={channel.channel} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div 
-                      className="w-4 h-4 rounded-full" 
-                      style={{ backgroundColor: channel.color }}
-                    ></div>
-                    <span className="font-medium">{channel.channel}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-medium">{channel.messages.toLocaleString()}</div>
-                    <div className="text-sm text-gray-500">
-                      {totalMessages > 0 ? ((channel.messages / totalMessages) * 100).toFixed(1) : 0}%
+              {channelData.map((channel) => {
+                const totalMessages = channelData.reduce((sum, item) => sum + item.messages, 0);
+                return (
+                  <div key={channel.channel} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ backgroundColor: channel.color }}
+                      ></div>
+                      <span className="font-medium">{channel.channel}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-medium">{channel.messages.toLocaleString()}</div>
+                      <div className="text-sm text-gray-500">
+                        {totalMessages > 0 ? ((channel.messages / totalMessages) * 100).toFixed(1) : 0}%
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
