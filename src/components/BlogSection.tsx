@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const BlogSection = () => {
   const blogPosts = [
@@ -76,42 +77,43 @@ const BlogSection = () => {
         {/* Blog Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {blogPosts.map((post, index) => (
-            <article 
+            <Link 
               key={post.id}
-              className="bg-white rounded-2xl fitness-shadow fitness-hover overflow-hidden animate-on-scroll"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              to={`/blog/${post.id}`}
+              className="group"
             >
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                />
-              </div>
-              <div className="p-6">
-                <span className="inline-block px-3 py-1 bg-fitness-green-100 text-fitness-dark text-sm font-body rounded-full mb-3">
-                  {post.category}
-                </span>
-                <h3 className="text-xl font-heading text-fitness-dark mb-3 leading-tight">
-                  {post.title}
-                </h3>
-                <p className="text-fitness-dark/70 font-body text-sm mb-4 line-clamp-3">
-                  {post.excerpt}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-fitness-dark/60 text-sm font-body">
-                    {post.date}
-                  </span>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="text-fitness-dark hover:text-fitness-green-600 p-0"
-                  >
-                    Read More <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+              <article 
+                className="bg-white rounded-2xl fitness-shadow fitness-hover overflow-hidden animate-on-scroll"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
                 </div>
-              </div>
-            </article>
+                <div className="p-6">
+                  <span className="inline-block px-3 py-1 bg-fitness-green-100 text-fitness-dark text-sm font-body rounded-full mb-3">
+                    {post.category}
+                  </span>
+                  <h3 className="text-xl font-heading text-fitness-dark mb-3 leading-tight">
+                    {post.title}
+                  </h3>
+                  <p className="text-fitness-dark/70 font-body text-sm mb-4 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-fitness-dark/60 text-sm font-body">
+                      {post.date}
+                    </span>
+                    <div className="flex items-center text-fitness-green-600 font-body text-sm">
+                      Read More <ArrowRight className="w-4 h-4 ml-2" />
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
 

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const TrainersSection = () => {
   const trainers = [
@@ -74,33 +75,33 @@ const TrainersSection = () => {
           </h2>
         </div>
 
-        {/* Featured Trainer Section */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-20 animate-on-scroll">
-          <div className="lg:col-span-3">
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="aspect-[3/4] overflow-hidden rounded-2xl">
-                <img
-                  src="/lovable-uploads/eba8f342-a669-4c0c-b8bc-603c5fa4f979.png"
-                  alt="Clare Ford"
-                  className="w-full h-full object-cover"
-                />
+        {/* Trainers Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 animate-on-scroll">
+          {trainers.map((trainer, index) => (
+            <Link 
+              key={trainer.id}
+              to={`/trainer/${trainer.id}`}
+              className="group fitness-hover"
+            >
+              <div className="bg-white rounded-2xl fitness-shadow overflow-hidden">
+                <div className="aspect-[3/4] overflow-hidden">
+                  <img
+                    src={trainer.image}
+                    alt={trainer.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6">
+                  <p className="text-fitness-dark/60 font-body text-sm mb-2">{trainer.specialty}</p>
+                  <h3 className="text-xl font-heading text-fitness-dark mb-3">{trainer.name}</h3>
+                  <p className="text-fitness-dark/70 font-body text-sm mb-4">{trainer.description}</p>
+                  <div className="flex items-center text-fitness-green-600 font-body text-sm">
+                    View Profile <ArrowRight className="w-4 h-4 ml-2" />
+                  </div>
+                </div>
               </div>
-              <div className="aspect-[3/4] overflow-hidden rounded-2xl">
-                <img
-                  src="/lovable-uploads/af677762-cdfa-4d3a-9d12-180f7051b5ab.png"
-                  alt="Trainer"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="aspect-[3/4] overflow-hidden rounded-2xl">
-                <img
-                  src="/lovable-uploads/0d8e903a-6b25-4ca5-9c22-e8e1ee1c02d9.png"
-                  alt="Trainer"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
+            </Link>
+          ))}
         </div>
 
         {/* Services Offered */}

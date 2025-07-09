@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ShoppingCart, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,13 +17,7 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
-  };
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <header 
@@ -32,44 +28,62 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="font-heading text-2xl font-bold text-fitness-dark italic">
+          <Link to="/" className="font-heading text-2xl font-bold text-fitness-dark italic">
             Fitness™
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:block">
             <ul className="flex items-center space-x-8">
               <li>
-                <button 
-                  onClick={() => scrollToSection('trainers')}
-                  className="text-fitness-dark hover:text-fitness-green-600 transition-colors font-body"
+                <Link 
+                  to="/"
+                  className={`text-fitness-dark hover:text-fitness-green-600 transition-colors font-body ${
+                    isActive('/') ? 'text-fitness-green-600 font-semibold' : ''
+                  }`}
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/trainers"
+                  className={`text-fitness-dark hover:text-fitness-green-600 transition-colors font-body ${
+                    isActive('/trainers') ? 'text-fitness-green-600 font-semibold' : ''
+                  }`}
                 >
                   Trainers
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => scrollToSection('blog')}
-                  className="text-fitness-dark hover:text-fitness-green-600 transition-colors font-body"
+                <Link 
+                  to="/blog"
+                  className={`text-fitness-dark hover:text-fitness-green-600 transition-colors font-body ${
+                    isActive('/blog') ? 'text-fitness-green-600 font-semibold' : ''
+                  }`}
                 >
                   Blog
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => scrollToSection('pricing')}
-                  className="text-fitness-dark hover:text-fitness-green-600 transition-colors font-body"
+                <Link 
+                  to="/plans"
+                  className={`text-fitness-dark hover:text-fitness-green-600 transition-colors font-body ${
+                    isActive('/plans') ? 'text-fitness-green-600 font-semibold' : ''
+                  }`}
                 >
                   Plans
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => scrollToSection('contact')}
-                  className="text-fitness-dark hover:text-fitness-green-600 transition-colors font-body"
+                <Link 
+                  to="/contact"
+                  className={`text-fitness-dark hover:text-fitness-green-600 transition-colors font-body ${
+                    isActive('/contact') ? 'text-fitness-green-600 font-semibold' : ''
+                  }`}
                 >
                   Contact
-                </button>
+                </Link>
               </li>
             </ul>
           </nav>
@@ -105,30 +119,51 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-fitness-green-200">
             <nav className="flex flex-col space-y-4 pt-4">
-              <button 
-                onClick={() => scrollToSection('trainers')}
-                className="text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body"
+              <Link 
+                to="/"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body ${
+                  isActive('/') ? 'text-fitness-green-600 font-semibold' : ''
+                }`}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/trainers"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body ${
+                  isActive('/trainers') ? 'text-fitness-green-600 font-semibold' : ''
+                }`}
               >
                 Trainers
-              </button>
-              <button 
-                onClick={() => scrollToSection('blog')}
-                className="text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body"
+              </Link>
+              <Link 
+                to="/blog"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body ${
+                  isActive('/blog') ? 'text-fitness-green-600 font-semibold' : ''
+                }`}
               >
                 Blog
-              </button>
-              <button 
-                onClick={() => scrollToSection('pricing')}
-                className="text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body"
+              </Link>
+              <Link 
+                to="/plans"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body ${
+                  isActive('/plans') ? 'text-fitness-green-600 font-semibold' : ''
+                }`}
               >
                 Plans
-              </button>
-              <button 
-                onClick={() => scrollToSection('contact')}
-                className="text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body"
+              </Link>
+              <Link 
+                to="/contact"
+                onClick={() => setIsMenuOpen(false)}
+                className={`text-fitness-dark hover:text-fitness-green-600 transition-colors text-left font-body ${
+                  isActive('/contact') ? 'text-fitness-green-600 font-semibold' : ''
+                }`}
               >
                 Contact
-              </button>
+              </Link>
               <div className="flex items-center space-x-4 pt-4">
                 <Button variant="ghost" size="sm" className="text-fitness-dark">
                   <ShoppingCart className="w-4 h-4 mr-2" />
